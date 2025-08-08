@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+SQLAlchemy
+asyncpg
+databases[postgresql]
+python-jose
+passlib[bcrypt]
+httpx
+python-multipart
+python-dotenv
+psycopg2-binary
