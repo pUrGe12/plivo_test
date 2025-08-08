@@ -81,7 +81,7 @@ async def get_current_user(request: Request):
     if len(parts) != 2 or parts[0] != "Bearer":
         raise HTTPException(status_code=401, detail="Invalid auth header")
     token = parts[1]
-    # payload = decode_token(token)
+    payload = decode_token(token)
     # if not payload:
     #     raise HTTPException(status_code=401, detail="Invalid token")
     user = await get_user_by_id(payload.get("sub"))
