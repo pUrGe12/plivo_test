@@ -12,10 +12,20 @@ import asyncio
 HUGGINGFACE_API_TOKEN = os.getenv("HUGGINGFACE_API_TOKEN")
 API_MODEL = os.getenv("HF_MODEL", "Salesforce/blip-image-captioning-base")
 
-app = FastAPI(title="Plivo Test Backend (FastAPI)")
+app = FastAPI()
 
-# CORS - in prod restrict to your Vercel domain
-origins = ["*"]
+origins = [
+    "https://plivo-test-front-nve5dd0d4-j44ys-projects.vercel.app"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -82,8 +92,8 @@ async def get_current_user(request: Request):
         raise HTTPException(status_code=401, detail="Invalid auth header")
     token = parts[1]
     payload = decode_token(token)
-    # if not payload:
-    #     raise HTTPException(status_code=401, detail="Invalid token")
+    if not payload:
+        raise HTTPException(status_code=401, detail="Invalid token")
     user = await get_user_by_id(payload.get("sub"))
     if not user:
         raise HTTPException(status_code=401, detail="User not found")
